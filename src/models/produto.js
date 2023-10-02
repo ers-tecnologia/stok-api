@@ -1,9 +1,8 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
-const bcrypt = require("bcrypt");
 
-const Usuario = sequelize.define(
-  "Usuario",
+const Produto = sequelize.define(
+  "Produto",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,31 +10,37 @@ const Usuario = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    nome: {
+    patrimonio: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
+    descricao: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
     },
-    senha: {
+    categoria: {
       type: DataTypes.STRING,
       allowNull: false,
-      set(value) {
-        const hash = bcrypt.hashSync(value, 10);
-        this.setDataValue("senha", hash);
-      },
-      unique: true,
     },
-    perfil: {
+    estado: {
       type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "ADM",
+    },
+    estoqueMinimo: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    estoqueMaximo: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    fotoProduto: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   { freezeTableName: true }
 );
 
-module.exports = Usuario;
+module.exports = Produto;
+
