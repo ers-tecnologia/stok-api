@@ -1,9 +1,9 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
-const Categoria = require("./categoria");
+const Solicitante = require("./solicitante");
 
-const Produto = sequelize.define(
-  "Produto",
+const DevolucaoItem = sequelize.define(
+  "DevolucaoItem",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,34 +11,33 @@ const Produto = sequelize.define(
       allowNull: false,
       primaryKey: true,
     },
-    patrimonio: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    descricao: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    estado: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    estoqueMinimo: {
+    produtoId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    estoqueMaximo: {
+    quantidade: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    fotoProduto: {
-      type: DataTypes.STRING,
-      allowNull: true,
+    dataEntrada: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    estoqueDestinoId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    usuarioId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
   },
   { freezeTableName: true }
 );
 
-Produto.belongsTo(Categoria, { foreignKey: "categoriaId", as: "categoria" });
+DevolucaoItem.belongsTo(Solicitante, {
+  foreignKey: "solicitanteId",
+  as: "solicitante",
+});
 
-module.exports = Produto;
+module.exports = DevolucaoItem;
