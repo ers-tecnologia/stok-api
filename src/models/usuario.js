@@ -14,7 +14,6 @@ const Usuario = sequelize.define(
     nome: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -28,7 +27,6 @@ const Usuario = sequelize.define(
         const hash = bcrypt.hashSync(value, 10);
         this.setDataValue("senha", hash);
       },
-      unique: true,
     },
     perfil: {
       type: DataTypes.STRING,

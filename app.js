@@ -2,17 +2,15 @@ require("dotenv").config();
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const routes = require('./routes')
+const routes = require("./routes");
 
 const cors = require("cors");
-
 
 const app = express();
 const PORT = process.env.API_PORT || 3000;
 
-
 app.use(cors());
-require('./src/config/db');
+require("./src/config/db");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
