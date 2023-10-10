@@ -1,27 +1,46 @@
 const EntradaItem = require("../models/entradaItem");
+const Estoque = require("../models/estoque");
+const Produto = require("../models/produto");
 
 class EntradaItemService {
   async createEntradaItem(entradaItem) {
     try {
-      const newEntradaItem = await EntradaItem.create(entradaItem);
-      return newEntradaItem;
+      if (isNaN(entradaItem.produtoId)) {
+        const produto = await Produto.findOne({ where: { descricao: entradaItem.produtoId } });
+        if (!produto) {
+          throw new Error(`Produto com descrição ${entradaItem.produtoId} não encontrado.`);
+        }
+        entradaItem.produtoId = produto.id;
+      }
+      const newSaidaItem = await EntradaItem.create(entradaItem);
+      return newSaidaItem;
     } catch (error) {
+      console.error(error);
       throw new Error(error.message);
     }
   }
 
   async findEntradaItems() {
     try {
-      const entradaItems = await EntradaItem.findAll();
+      const entradaItems = await EntradaItem.findAll({
+        include: [
+          { model: Estoque, as: "estoque" },
+        ],
+      });
       return entradaItems;
     } catch (error) {
+      console.error(error);
       throw new Error(error.message);
     }
   }
 
   async findEntradaItemById(id) {
     try {
-      const entradaItem = await EntradaItem.findByPk(id);
+      const entradaItem = await EntradaItem.findByPk(id, {
+        include: [
+          { model: Estoque, as: "estoque" },
+        ],
+      });
       return entradaItem;
     } catch (error) {
       throw new Error(error.message);
@@ -30,12 +49,15 @@ class EntradaItemService {
 
   async updateEntradaItem(id, entradaItem) {
     try {
-      const [updatedRowsCount, updatedRows] = await EntradaItem.update(entradaItem, {
-        where: {
-          id: id,
-        },
-        returning: true,
-      });
+      const [updatedRowsCount, updatedRows] = await EntradaItem.update(
+        entradaItem,
+        {
+          where: {
+            id: id,
+          },
+          returning: true,
+        }
+      );
       if (updatedRowsCount === 0) {
         throw new Error("Entrada de Item não encontrada");
       }

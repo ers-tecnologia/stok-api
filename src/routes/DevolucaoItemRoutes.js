@@ -35,6 +35,36 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/produtoId/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await DevolucaoItemService.findDevolucaoItemByProdutoId(id);
+    if (!result) {
+      res.status(404).json({ message: `Produto com id ${id} não encontrado.` });
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Erro ao buscar estoque.", error });
+  }
+});
+
+router.get("/descricao/:descricao", async (req, res) => {
+  const { descricao } = req.params;
+  try {
+    const result = await DevolucaoItemService.findDevolucaoItemByDescricao(descricao);
+    if (!result) {
+      res.status(404).json({ message: `Estoque com id ${descricao} não encontrado.` });
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Erro ao buscar estoque.", error });
+  }
+});
+
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const devolucao = req.body;

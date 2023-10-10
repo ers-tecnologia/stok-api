@@ -1,6 +1,8 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 const Solicitante = require("./solicitante");
+const Produto = require("./produto");
+const Estoque = require("./estoque");
 
 const DevolucaoItem = sequelize.define(
   "DevolucaoItem",
@@ -13,6 +15,10 @@ const DevolucaoItem = sequelize.define(
     },
     produtoId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: "Produto",
+        key: "id",
+      },
       allowNull: false,
     },
     quantidade: {
@@ -23,21 +29,28 @@ const DevolucaoItem = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    estoqueDestinoId: {
+    solicitanteId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: "Solicitante",
+        key: "id",
+      },
       allowNull: false,
     },
-    usuarioId: {
+    estoqueId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: "Estoque",
+        key: "id",
+      },
       allowNull: false,
     },
   },
   { freezeTableName: true }
 );
 
-DevolucaoItem.belongsTo(Solicitante, {
-  foreignKey: "solicitanteId",
-  as: "solicitante",
-});
+DevolucaoItem.belongsTo(Produto, { foreignKey: "produtoId", as: "produto" });
+DevolucaoItem.belongsTo(Solicitante, {foreignKey: "solicitanteId", as: "solicitante",});
+DevolucaoItem.belongsTo(Estoque, { foreignKey: "estoqueId", as: "estoque" });
 
 module.exports = DevolucaoItem;

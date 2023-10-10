@@ -19,6 +19,14 @@ const Produto = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    categoriaId: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: 'Categoria', 
+        key: 'id',
+      },
+      allowNull: true,
+    },
     estado: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -39,6 +47,8 @@ const Produto = sequelize.define(
   { freezeTableName: true }
 );
 
-Produto.belongsTo(Categoria, { foreignKey: "categoriaId", as: "categoria" });
+
+Produto.belongsTo(Categoria, { as: 'categoria', foreignKey: 'categoriaId' });
+
 
 module.exports = Produto;

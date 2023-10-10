@@ -35,6 +35,35 @@ router.get("/devolucao-item/:id", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await DevolucaoItemService.findDevolucaoItemByProdutoId(id);
+    if (!result) {
+      res.status(404).json({ message: `Item de devolução com descricao ${id} não encontrado.` });
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar item de saída.", error });
+  }
+});
+
+router.get("/:descricao", async (req, res) => {
+  const { descricao } = req.params;
+  try {
+    const result = await DevolucaoItemService.findSaidaItemByDescricao(descricao);
+    if (!result) {
+      res.status(404).json({ message: `Item de devolução com descricao ${descricao} não encontrado.` });
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar item de saída.", error });
+  }
+});
+
+
 router.put("/devolucao-item/:id", async (req, res) => {
   const { id } = req.params;
   const devolucaoItem = req.body;

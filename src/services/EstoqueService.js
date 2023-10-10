@@ -12,7 +12,7 @@ class EstoqueService {
 
   async findEstoques() {
     try {
-      const estoques = await Estoque.findAll();
+      const estoques = await Estoque.findAll({ order: [["id", "ASC"]] });
       return estoques;
     } catch (error) {
       throw new Error(error.message);

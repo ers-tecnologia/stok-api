@@ -18,4 +18,5 @@ const Categoria = sequelize.define(
   { freezeTableName: true }
 );
 
+
 module.exports = Categoria;

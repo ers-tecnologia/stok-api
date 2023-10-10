@@ -1,4 +1,5 @@
 const Produto = require("../models/produto");
+const Categoria = require('../models/categoria')
 
 class ProdutoService {
   async createProduto(produto) {
@@ -12,16 +13,21 @@ class ProdutoService {
 
   async findProdutos() {
     try {
-      const produtos = await Produto.findAll();
+      const produtos = await Produto.findAll({
+        include: [{ model: Categoria, as: 'categoria' }]
+      });
       return produtos;
     } catch (error) {
+      console.error(error);
       throw new Error(error.message);
     }
   }
 
   async findProdutoById(id) {
     try {
-      const produto = await Produto.findByPk(id);
+      const produto = await Produto.findByPk(id, {
+        include: [{ model: Categoria, as: 'categoria' }]
+      });
       return produto;
     } catch (error) {
       throw new Error(error.message);

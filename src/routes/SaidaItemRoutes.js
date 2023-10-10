@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const SaidaItemService = require("../services/SaidaItemService");
+const { Op } = require("sequelize");
 
 router.post("/", async (req, res) => {
   const estoque = req.body;
@@ -21,6 +22,45 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const result = await SaidaItemService.findSaidaItems();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar itens de saída.", error });
+  }
+});
+
+router.get("/produtoId/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await SaidaItemService.findSaidaItemByProdutoId(id);
+    if (!result) {
+      res.status(404).json({ message: `Produto com id ${id} não encontrado.` });
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Erro ao buscar estoque.", error });
+  }
+});
+
+router.get("/descricao/:descricao", async (req, res) => {
+  const { descricao } = req.params;
+  try {
+    const result = await SaidaItemService.findSaidaItemByDescricao(descricao);
+    if (!result) {
+      res.status(404).json({ message: `Estoque com id ${descricao} não encontrado.` });
+    } else {
+      res.json(result);
+    }
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "Erro ao buscar estoque.", error });
+  }
+});
+
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   try {
@@ -34,6 +74,8 @@ router.get("/:id", async (req, res) => {
     res.status(500).json({ message: "Erro ao buscar estoque.", error });
   }
 });
+
+
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;

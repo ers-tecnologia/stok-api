@@ -8,6 +8,7 @@ const SolicitanteRoutes = require("./src/routes/SolicitanteRoutes")
 const ProdutoRoutes = require("./src/routes/ProdutoRoutes")
 const EntradaItemRoutes = require("./src/routes/EntradaItemRoutes")
 const DevolucaoItemRoutes = require("./src/routes/DevolucaoItemRoutes")
+const SaidaItemRoutes = require("./src/routes/SaidaItemRoutes")
 
 
 router.use("/usuario",  RegisterUserRoutes);
@@ -18,6 +19,7 @@ router.use("/solicitante", SolicitanteRoutes);
 router.use("/produto", ProdutoRoutes);
 router.use("/entrada-item", EntradaItemRoutes);
 router.use("/devolucao-item", DevolucaoItemRoutes);
+router.use("/saida-item", SaidaItemRoutes);
 
 
 module.exports = router;

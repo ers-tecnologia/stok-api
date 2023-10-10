@@ -1,5 +1,8 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
+const Estoque = require('./estoque')
+const Produto = require("./produto");
+
 
 const EntradaItem = sequelize.define(
   "EntradaItem",
@@ -12,7 +15,11 @@ const EntradaItem = sequelize.define(
     },
     produtoId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      references: {
+        model: "Produto",
+        key: "id",
+      },
+      allowNull: false,
     },
     quantidade: {
       type: DataTypes.INTEGER,
@@ -26,16 +33,22 @@ const EntradaItem = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    estoqueOrigem: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    usuarioResponsavelId: {
+    estoqueId: {
       type: DataTypes.INTEGER,
+      references: {
+        model: 'Estoque', 
+        key: 'id',
+      },
       allowNull: false,
     },
   },
   { freezeTableName: true }
 );
+
+EntradaItem.belongsTo(Estoque, { as: 'estoque', foreignKey: 'estoqueId' });
+EntradaItem.belongsTo(Produto, { foreignKey: "produtoId", as: "produto" });
+
+
+
 
 module.exports = EntradaItem;
