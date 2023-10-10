@@ -22,8 +22,8 @@ const Produto = sequelize.define(
     categoriaId: {
       type: DataTypes.INTEGER,
       references: {
-        model: 'Categoria', 
-        key: 'id',
+        model: "Categoria",
+        key: "id",
       },
       allowNull: true,
     },
@@ -40,15 +40,13 @@ const Produto = sequelize.define(
       allowNull: false,
     },
     fotoProduto: {
-      type: DataTypes.STRING,
+      type: DataTypes.BLOB,
       allowNull: true,
     },
   },
   { freezeTableName: true }
 );
 
-
-Produto.belongsTo(Categoria, { as: 'categoria', foreignKey: 'categoriaId' });
-
+Produto.belongsTo(Categoria, { as: "categoria", foreignKey: "categoriaId" });
 
 module.exports = Produto;
