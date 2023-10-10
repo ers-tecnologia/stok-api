@@ -28,11 +28,6 @@ const Usuario = sequelize.define(
         this.setDataValue("senha", hash);
       },
     },
-    perfil: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "ADM",
-    },
   },
   { freezeTableName: true }
 );
