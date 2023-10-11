@@ -6,9 +6,13 @@ class EntradaItemService {
   async createEntradaItem(entradaItem) {
     try {
       if (isNaN(entradaItem.produtoId)) {
-        const produto = await Produto.findOne({ where: { descricao: entradaItem.produtoId } });
+        const produto = await Produto.findOne({
+          where: { descricao: entradaItem.produtoId },
+        });
         if (!produto) {
-          throw new Error(`Produto com descrição ${entradaItem.produtoId} não encontrado.`);
+          throw new Error(
+            `Produto com descrição ${entradaItem.produtoId} não encontrado.`
+          );
         }
         entradaItem.produtoId = produto.id;
       }
@@ -25,6 +29,7 @@ class EntradaItemService {
       const entradaItems = await EntradaItem.findAll({
         include: [
           { model: Estoque, as: "estoque" },
+          { model: Produto, as: "produto", attributes: ["descricao"] },
         ],
       });
       return entradaItems;
@@ -39,6 +44,7 @@ class EntradaItemService {
       const entradaItem = await EntradaItem.findByPk(id, {
         include: [
           { model: Estoque, as: "estoque" },
+          { model: Produto, as: "produto" },
         ],
       });
       return entradaItem;
