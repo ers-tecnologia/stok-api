@@ -1,4 +1,4 @@
-const Usuario = require("../models/usuario");
+const { Usuario } = require("../models");
 const bcrypt = require("bcrypt");
 
 class UsuarioService {
@@ -18,7 +18,6 @@ class UsuarioService {
       throw new Error(error.message);
     }
   }
-
 }
 
 module.exports = new UsuarioService();

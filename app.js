@@ -7,7 +7,7 @@ const routes = require("./routes");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.API_PORT || 3001;
+const PORT = process.env.API_PORT || 3002;
 
 app.use(cors());
 require("./src/config/db");

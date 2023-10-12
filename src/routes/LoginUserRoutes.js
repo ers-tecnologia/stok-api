@@ -8,19 +8,17 @@ router.post("/", async (req, res) => {
   try {
     const usuario = await UsuarioService.autenticarUsuario(email, senha);
     if (usuario) {
-      // Gerando o token com a chave secreta
-      const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET);
+      // Generate token with the secret key
+      const token = jwt.sign({ id: usuario.id }, process.env.JWT_SECRET); // Use the same secret key as in backend/index.js
 
-      // Retornando o usuário e o token
+      // Return the user and the token
       res.json({ usuario, token });
     } else {
-      res.status(401).json({ message: "Credenciais inválidas" });
+      res.status(401).json({ message: "Invalid credentials" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao autenticar usuário.", error });
+    res.status(500).json({ message: "Error authenticating user.", error });
   }
 });
-
-
 
 module.exports = router;
