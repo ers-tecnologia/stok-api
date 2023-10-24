@@ -39,8 +39,16 @@ const Produto = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    pontoPedido: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     fotoProduto: {
-      type: DataTypes.BLOB,
+      type: DataTypes.BLOB('long'),
+      allowNull: true,
+    },
+    mimeType: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
   },

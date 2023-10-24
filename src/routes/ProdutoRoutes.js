@@ -1,14 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const ProdutoService = require("../services/ProdutoService");
+const multer = require("multer");
+const upload = multer();
 
-router.post("/", async (req, res) => {
-  const estoque = req.body;
+router.post("/", upload.single("fotoProduto"), async (req, res) => {
+  const produto = req.body;
+  if (req.file) {
+    produto.fotoProduto = req.file.buffer;
+    produto.mimeType = req.file.mimetype;
+  }
   try {
-    const result = await ProdutoService.createProduto(estoque);
+    const result = await ProdutoService.createProduto(produto);
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: "Erro ao criar estoque.", error });
+    res.status(500).json({ message: "Erro ao criar produto.", error });
   }
 });
 
@@ -17,7 +23,7 @@ router.get("/", async (req, res) => {
     const result = await ProdutoService.findProdutos();
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar estoques.", error });
+    res.status(500).json({ message: "Erro ao buscar produtos.", error });
   }
 });
 
@@ -26,27 +32,27 @@ router.get("/:id", async (req, res) => {
   try {
     const result = await ProdutoService.findProdutoById(id);
     if (!result) {
-      res.status(404).json({ message: `Estoque com id ${id} não encontrado.` });
+      res.status(404).json({ message: `produto com id ${id} não encontrado.` });
     } else {
       res.json(result);
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar estoque.", error });
+    res.status(500).json({ message: "Erro ao buscar produto.", error });
   }
 });
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const estoque = req.body;
+  const produto = req.body;
   try {
-    const result = await ProdutoService.updateProduto(id, estoque);
+    const result = await ProdutoService.updateProduto(id, produto);
     if (!result) {
-      res.status(404).json({ message: `Estoque com id ${id} não encontrado.` });
+      res.status(404).json({ message: `produto com id ${id} não encontrado.` });
     } else {
       res.json(result);
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao atualizar estoque.", error });
+    res.status(500).json({ message: "Erro ao atualizar produto.", error });
   }
 });
 
@@ -57,10 +63,10 @@ router.delete("/:id", async (req, res) => {
     if (result) {
       res.json(result);
     } else {
-      res.status(404).json({ message: "Estoque não encontrado" });
+      res.status(404).json({ message: "produto não encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao excluir estoque" });
+    res.status(500).json({ message: "Erro ao excluir produto" });
   }
 });
 
