@@ -41,9 +41,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("fotoProduto"), async (req, res) => {
+  console.log(req.file);
   const { id } = req.params;
   const produto = req.body;
+  if (req.file) {
+    produto.fotoProduto = req.file.buffer;
+  }
   try {
     const result = await ProdutoService.updateProduto(id, produto);
     if (!result) {
