@@ -3,16 +3,19 @@ const router = express.Router();
 const SaldoService = require("../services/SaldoService");
 
 router.post("/", async (req, res) => {
+  console.log("Entrou na rota POST /");
   const saldo = req.body;
   try {
     const result = await SaldoService.createSaldo(saldo);
     res.json(result);
   } catch (error) {
+    console.error("Erro ao criar saldo:", error);
     res.status(500).json({ message: "Erro ao criar saldo.", error });
   }
 });
 
 router.get("/", async (req, res) => {
+  console.log("Entrou na rota GET /");
   try {
     const { estoqueId, produtoId } = req.query;
 
@@ -27,11 +30,13 @@ router.get("/", async (req, res) => {
       res.json(result);
     }
   } catch (error) {
+    console.error("Erro ao buscar saldos:", error);
     res.status(500).json({ message: "Erro ao buscar saldos.", error });
   }
 });
 
-router.get("/api/saldo", async (req, res) => {
+router.get("/inventario", async (req, res) => {
+  console.log("Entrou na rota GET /api/saldo");
   try {
     const { estoqueId } = req.query;
 
@@ -44,13 +49,14 @@ router.get("/api/saldo", async (req, res) => {
         .json({ message: "O parâmetro 'estoqueId' é obrigatório." });
     }
   } catch (error) {
+    console.error("Erro ao buscar saldos agrupados:", error);
     res
       .status(500)
       .json({ message: "Erro ao buscar saldos agrupados.", error });
   }
 });
-
 router.get("/:id", async (req, res) => {
+  console.log("Entrou na rota GET /:id");
   const { id } = req.params;
   try {
     const result = await SaldoService.findSaldoById(id);
@@ -60,11 +66,13 @@ router.get("/:id", async (req, res) => {
       res.json(result);
     }
   } catch (error) {
+    console.error("Erro ao buscar saldo:", error);
     res.status(500).json({ message: "Erro ao buscar saldo.", error });
   }
 });
 
 router.put("/:id", async (req, res) => {
+  console.log("Entrou na rota PUT /:id");
   const { id } = req.params;
   const saldo = req.body;
   try {
@@ -75,11 +83,13 @@ router.put("/:id", async (req, res) => {
       res.json(result);
     }
   } catch (error) {
+    console.error("Erro ao atualizar saldo:", error);
     res.status(500).json({ message: "Erro ao atualizar saldo.", error });
   }
 });
 
 router.delete("/:id", async (req, res) => {
+  console.log("Entrou na rota DELETE /:id");
   try {
     const { id } = req.params;
     const result = await SaldoService.deleteSaldo(id);
@@ -89,7 +99,8 @@ router.delete("/:id", async (req, res) => {
       res.status(404).json({ message: "saldo não encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao excluir saldo" });
+    console.error("Erro ao excluir saldo:", error);
+    res.status(500).json({ message: "Erro ao excluir saldo", error });
   }
 });
 

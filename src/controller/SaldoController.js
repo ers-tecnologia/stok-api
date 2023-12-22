@@ -8,15 +8,17 @@ router.post("/criar-saldo", async (req, res) => {
     const result = await SaldoService.createSaldo(saldo);
     res.json(result);
   } catch (error) {
+    console.error("Erro ao criar saldo:", error);
     res.status(500).json({ message: "Erro ao criar saldo.", error });
   }
 });
 
 router.get("/buscar-saldos", async (req, res) => {
   try {
-    const result = await SaldoService.findSaldo();
+    const result = await SaldoService.findSaldos();
     res.json(result);
   } catch (error) {
+    console.error("Erro ao buscar saldos:", error);
     res.status(500).json({ message: "Erro ao buscar saldos.", error });
   }
 });
@@ -31,6 +33,7 @@ router.get("/buscar-saldo/:id", async (req, res) => {
       res.json(result);
     }
   } catch (error) {
+    console.error("Erro ao buscar saldo:", error);
     res.status(500).json({ message: "Erro ao buscar saldo.", error });
   }
 });
@@ -46,6 +49,7 @@ router.put("/atualizar-saldo/:id", async (req, res) => {
       res.json(result);
     }
   } catch (error) {
+    console.error("Erro ao atualizar saldo:", error);
     res.status(500).json({ message: "Erro ao atualizar saldo.", error });
   }
 });
@@ -60,7 +64,8 @@ router.delete("/saldo/:id", async (req, res) => {
       res.status(404).json({ message: "Saldo não encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao excluir saldo" });
+    console.error("Erro ao excluir saldo:", error);
+    res.status(500).json({ message: "Erro ao excluir saldo", error });
   }
 });
 
