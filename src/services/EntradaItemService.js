@@ -24,9 +24,33 @@ class EntradaItemService {
     }
   }
 
-  async findEntradaItems() {
+  async findEntradaItems(estoqueId, produtoId) {
+    try {
+      const whereClause = {};
+      if (estoqueId) {
+        whereClause.estoqueId = estoqueId;
+      }
+      if (produtoId) {
+        whereClause.produtoId = produtoId;
+      }
+      const entradaItems = await EntradaItem.findAll({
+        where: whereClause,
+        include: [
+          { model: Estoque, as: "estoque" },
+          { model: Produto, as: "produto", attributes: ["descricao"] },
+        ],
+      });
+      return entradaItems;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async findEntradaItemsByEstoqueId(estoqueId) {
     try {
       const entradaItems = await EntradaItem.findAll({
+        where: { estoqueId: estoqueId },
         include: [
           { model: Estoque, as: "estoque" },
           { model: Produto, as: "produto", attributes: ["descricao"] },

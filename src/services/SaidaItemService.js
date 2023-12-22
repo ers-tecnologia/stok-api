@@ -10,9 +10,13 @@ class SaidaItemService {
   async createSaidaItem(saidaItem) {
     try {
       if (isNaN(saidaItem.produtoId)) {
-        const produto = await Produto.findOne({ where: { descricao: saidaItem.produtoId } });
+        const produto = await Produto.findOne({
+          where: { descricao: saidaItem.produtoId },
+        });
         if (!produto) {
-          throw new Error(`Produto com descrição ${saidaItem.produtoId} não encontrado.`);
+          throw new Error(
+            `Produto com descrição ${saidaItem.produtoId} não encontrado.`
+          );
         }
         saidaItem.produtoId = produto.id;
       }
@@ -24,9 +28,35 @@ class SaidaItemService {
     }
   }
 
-  async findSaidaItems() {
+  async findSaidaItems(estoqueId, produtoId) {
+    try {
+      const whereClause = {};
+      if (estoqueId) {
+        whereClause.estoqueId = estoqueId;
+      }
+      if (produtoId) {
+        whereClause.produtoId = produtoId;
+      }
+      const saidaItems = await SaidaItem.findAll({
+        where: whereClause,
+        include: [
+          { model: Produto, as: "produto" },
+          { model: Usuario, as: "usuario" },
+          { model: Estoque, as: "estoque" },
+          { model: Solicitante, as: "solicitante" },
+        ],
+      });
+      return saidaItems;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async findSaidaItemsByEstoqueId(estoqueId) {
     try {
       const saidaItems = await SaidaItem.findAll({
+        where: { estoqueId: estoqueId },
         include: [
           { model: Produto, as: "produto" },
           { model: Usuario, as: "usuario" },
@@ -59,9 +89,9 @@ class SaidaItemService {
 
   async findSaidaItemByProdutoId(id) {
     try {
-      const saidaItem = await SaidaItem.findOne( {
+      const saidaItem = await SaidaItem.findOne({
         include: [
-          { model: Produto, as: "produto",  where: { id: id } },
+          { model: Produto, as: "produto", where: { id: id } },
           { model: Usuario, as: "usuario" },
           { model: Estoque, as: "estoque" },
           { model: Solicitante, as: "solicitante" },
@@ -72,16 +102,16 @@ class SaidaItemService {
       throw new Error(error.message);
     }
   }
-  
+
   async findSaidaItemByDescricao(descricao) {
     try {
       const saidaItem = await SaidaItem.findOne({
         include: [
-          { 
-            model: Produto, 
-            as: "produto", 
-            attributes: ['descricao'],
-            where: { descricao: descricao }
+          {
+            model: Produto,
+            as: "produto",
+            attributes: ["descricao"],
+            where: { descricao: descricao },
           },
           { model: Usuario, as: "usuario" },
           { model: Estoque, as: "estoque" },

@@ -1,63 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const SaidaItemService = require("../services/SaidaItemService");
-const { Op } = require("sequelize");
 
 router.post("/", async (req, res) => {
-  const estoque = req.body;
+  const saidaItem = req.body;
   try {
-    const result = await SaidaItemService.createSaidaItem(estoque);
+    const result = await SaidaItemService.createSaidaItem(saidaItem);
     res.json(result);
   } catch (error) {
-    res.status(500).json({ message: "Erro ao criar estoque.", error });
+    res.status(500).json({ message: "Erro ao criar item de saída.", error });
   }
 });
 
 router.get("/", async (req, res) => {
+  const { estoqueId, produtoId } = req.query;
   try {
-    const result = await SaidaItemService.findSaidaItems();
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar estoques.", error });
-  }
-});
-
-router.get("/", async (req, res) => {
-  try {
-    const result = await SaidaItemService.findSaidaItems();
+    const result = await SaidaItemService.findSaidaItems(estoqueId, produtoId);
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: "Erro ao buscar itens de saída.", error });
-  }
-});
-
-router.get("/produtoId/:id", async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await SaidaItemService.findSaidaItemByProdutoId(id);
-    if (!result) {
-      res.status(404).json({ message: `Produto com id ${id} não encontrado.` });
-    } else {
-      res.json(result);
-    }
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Erro ao buscar estoque.", error });
-  }
-});
-
-router.get("/descricao/:descricao", async (req, res) => {
-  const { descricao } = req.params;
-  try {
-    const result = await SaidaItemService.findSaidaItemByDescricao(descricao);
-    if (!result) {
-      res.status(404).json({ message: `Estoque com id ${descricao} não encontrado.` });
-    } else {
-      res.json(result);
-    }
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ message: "Erro ao buscar estoque.", error });
   }
 });
 
@@ -66,29 +27,33 @@ router.get("/:id", async (req, res) => {
   try {
     const result = await SaidaItemService.findSaidaItemById(id);
     if (!result) {
-      res.status(404).json({ message: `Estoque com id ${id} não encontrado.` });
+      res
+        .status(404)
+        .json({ message: `Item de saída com id ${id} não encontrado.` });
     } else {
       res.json(result);
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao buscar estoque.", error });
+    res.status(500).json({ message: "Erro ao buscar item de saída.", error });
   }
 });
 
-
-
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const estoque = req.body;
+  const saidaItem = req.body;
   try {
-    const result = await SaidaItemService.updateSaidaItem(id, estoque);
+    const result = await SaidaItemService.updateSaidaItem(id, saidaItem);
     if (!result) {
-      res.status(404).json({ message: `Estoque com id ${id} não encontrado.` });
+      res
+        .status(404)
+        .json({ message: `Item de saída com id ${id} não encontrado.` });
     } else {
       res.json(result);
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao atualizar estoque.", error });
+    res
+      .status(500)
+      .json({ message: "Erro ao atualizar item de saída.", error });
   }
 });
 
@@ -99,10 +64,10 @@ router.delete("/:id", async (req, res) => {
     if (result) {
       res.json(result);
     } else {
-      res.status(404).json({ message: "Estoque não encontrado" });
+      res.status(404).json({ message: "Item de saída não encontrado" });
     }
   } catch (error) {
-    res.status(500).json({ message: "Erro ao excluir estoque" });
+    res.status(500).json({ message: "Erro ao excluir item de saída" });
   }
 });
 
