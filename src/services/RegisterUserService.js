@@ -1,9 +1,7 @@
 const Usuario = require("../models/usuario");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 const SECRET = process.env.JWT_SECRET;
-
-
 
 class UsuarioService {
   constructor() {}
@@ -53,7 +51,7 @@ class UsuarioService {
 
   async deleteUsuario(id) {
     try {
-      if (id == 1) {
+      if (id == 2) {
         throw new Error("Não é possível excluir esse usuário.");
       }
       const usuario = await Usuario.findByPk(id);
@@ -81,7 +79,11 @@ class UsuarioService {
       }
       const senhaCorreta = await bcrypt.compare(senha, usuario.senha);
       if (senhaCorreta) {
-        const token = jwt.sign({ id: usuario.id, perfil: usuario.perfil }, SECRET, { expiresIn: "1h" });
+        const token = jwt.sign(
+          { id: usuario.id, perfil: usuario.perfil },
+          SECRET,
+          { expiresIn: "1h" }
+        );
         return { ...usuario.toJSON(), token };
       } else {
         return null;

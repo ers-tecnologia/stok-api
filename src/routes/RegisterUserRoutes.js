@@ -12,17 +12,14 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get(
-  "/",
-  async (req, res) => {
-    try {
-      const result = await UsuarioService.findUsuarios();
-      res.json(result);
-    } catch (error) {
-      res.status(500).json({ message: "Erro ao buscar usuários.", error });
-    }
+router.get("/", async (req, res) => {
+  try {
+    const result = await UsuarioService.findUsuarios();
+    res.json(result);
+  } catch (error) {
+    res.status(500).json({ message: "Erro ao buscar usuários.", error });
   }
-);
+});
 
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
@@ -64,7 +61,7 @@ router.delete("/:id", async (req, res) => {
     }
   } catch (error) {
     const { id } = req.params;
-    if (id == 1) {
+    if (id == 2) {
       res.status(401).json({ message: "Esse usuário não pode ser deletado." });
     }
     console.log(error);
