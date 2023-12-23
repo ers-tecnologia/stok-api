@@ -9,7 +9,7 @@ const ProdutoRoutes = require("./src/routes/ProdutoRoutes");
 const EntradaItemRoutes = require("./src/routes/EntradaItemRoutes");
 const DevolucaoItemRoutes = require("./src/routes/DevolucaoItemRoutes");
 const SaidaItemRoutes = require("./src/routes/SaidaItemRoutes");
-const SubestoqueRoutes = require("./src/routes/SubestoqueRoutes");
+const SubEstoqueRoutes = require("./src/routes/SubEstoqueRoutes");
 const SaldoRoutes = require("./src/routes/SaldoRoutes");
 
 router.use("/usuario", RegisterUserRoutes);
@@ -21,7 +21,7 @@ router.use("/produto", ProdutoRoutes);
 router.use("/entrada-item", EntradaItemRoutes);
 router.use("/devolucao-item", DevolucaoItemRoutes);
 router.use("/saida-item", SaidaItemRoutes);
-router.use("/sub-estoque", SubestoqueRoutes);
+router.use("/sub-estoque", SubEstoqueRoutes);
 router.use("/saldo", SaldoRoutes);
 
 module.exports = router;

@@ -9,9 +9,11 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.API_PORT || 3002;
 
-app.use(cors({
-  origin: "*"
-}));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 require("./src/config/db");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
