@@ -1,6 +1,8 @@
+const Sequelize = require("sequelize");
+const Produto = require("../models/produto");
 const EntradaItem = require("../models/entradaItem");
 const Estoque = require("../models/estoque");
-const Produto = require("../models/produto");
+const Saldo = require("../models/saldo");
 
 class EntradaItemService {
   async createEntradaItem(entradaItem) {
@@ -16,8 +18,58 @@ class EntradaItemService {
         }
         entradaItem.produtoId = produto.id;
       }
-      const newSaidaItem = await EntradaItem.create(entradaItem);
-      return newSaidaItem;
+
+      const newEntradaItem = await EntradaItem.create(entradaItem);
+
+      // Atualiza o saldo no estoque e cria ou atualiza uma entrada na tabela Saldo
+      await this.atualizarSaldo(
+        entradaItem.produtoId,
+        entradaItem.estoqueId,
+        entradaItem.quantidade
+      );
+
+      return newEntradaItem;
+    } catch (error) {
+      console.error(error);
+      throw new Error(error.message);
+    }
+  }
+
+  async atualizarSaldo(produtoId, estoqueId, quantidade) {
+    try {
+      // Verifica se já existe um saldo para o produto no estoque
+      const saldo = await Saldo.findOne({ where: { produtoId, estoqueId } });
+
+      if (saldo) {
+        // Se já existe um saldo, atualiza a quantidade existente
+        await Saldo.update(
+          {
+            quantidade: Sequelize.literal(`quantidade + ${quantidade}`),
+            saldo: Sequelize.literal(`saldo + ${quantidade}`),
+          },
+          { where: { produtoId, estoqueId } }
+        );
+      } else {
+        // Se não existe um saldo, cria uma nova entrada com um valor inicial para o saldo
+        await Saldo.create({
+          produtoId,
+          estoqueId,
+          quantidade,
+          saldo: quantidade,
+        });
+      }
+
+      // Atualiza o saldo no estoque
+      const estoque = await Estoque.findByPk(estoqueId);
+      if (!estoque) {
+        throw new Error(`Estoque com id ${estoqueId} não encontrado.`);
+      }
+
+      const novoSaldoEstoque = +estoque.saldo + quantidade;
+      await Estoque.update(
+        { saldo: novoSaldoEstoque },
+        { where: { id: estoqueId } }
+      );
     } catch (error) {
       console.error(error);
       throw new Error(error.message);
