@@ -151,18 +151,32 @@ class EntradaItemService {
 
   async deleteEntradaItem(id) {
     try {
-      const entradaItem = await EntradaItem.findByPk(id);
+      const entradaItem = await EntradaItem.findByPk(id, {
+        include: [
+          { model: Produto, as: "produto" },
+          { model: Estoque, as: "estoque" },
+        ],
+      });
+
       if (!entradaItem) {
         throw new Error("Entrada de Item não encontrada");
       }
 
+      // Antes de excluir, atualiza o saldo invertendo a operação
+      await this.atualizarSaldo(
+        entradaItem.produto.id,
+        entradaItem.estoque.id,
+        -entradaItem.quantidade
+      );
+
+      // Agora pode excluir o item de entrada
       await EntradaItem.destroy({
         where: {
           id: id,
         },
       });
 
-      return entradaItem;
+      return entradaItem; // Retorna o objeto excluído
     } catch (error) {
       throw new Error(error.message);
     }
