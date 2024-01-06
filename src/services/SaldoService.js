@@ -1,4 +1,4 @@
-const { Op, literal, fn, col } = require("sequelize");
+const { Op, literal } = require("sequelize");
 const Sequelize = require("sequelize");
 const Saldo = require("../models/saldo");
 
@@ -61,7 +61,7 @@ class SaldoService {
 
       const result = await Saldo.findAll({
         attributes: [
-          "id",
+          [Sequelize.literal('DISTINCT ON ("produtoId") id'), "id"],
           "produtoId",
           "estoqueId",
           "saldo",
@@ -70,14 +70,11 @@ class SaldoService {
         ],
         where: {
           estoqueId: estoqueId,
-          updatedAt: {
-            [Op.in]: literal(`(
-              SELECT MAX("s"."updatedAt") FROM "Saldo" AS "s"
-              WHERE "s"."produtoId" = "Saldo"."produtoId" AND "s"."estoqueId" = ${estoqueId}
-            )`),
-          },
         },
-        order: [["updatedAt", "DESC"]],
+        order: [
+          ["produtoId", "DESC"],
+          ["updatedAt", "DESC"],
+        ],
       });
 
       console.log("Result:", result);
@@ -90,6 +87,7 @@ class SaldoService {
       throw error;
     }
   }
+
   async findSaldosByFilters(estoqueId, produtoId) {
     try {
       const whereClause = {};
